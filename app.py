@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, make_response, request, abort
 
 app = Flask(__name__)
 
@@ -58,7 +58,7 @@ def createPerson():
 # Update existing person
 @app.route('/api/people/id=<int:person_id>', methods=['PUT'])
 # curl -i -H "Content-Type: application/json" -X PUT -d '{"student":true}' http://localhost:5000/api/people/id=2
-def update_task(person_id):
+def updatePerson(person_id):
     person = [person for person in people if person['id'] == person_id]
     if len(person) == 0:
         notFound(abort(404))
