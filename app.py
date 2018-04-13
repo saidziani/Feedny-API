@@ -54,3 +54,27 @@ def createPerson():
     people.append(person)
     return jsonify({'person': person}), 201
 
+
+# Update existing person
+@app.route('/api/people/id=<int:person_id>', methods=['PUT'])
+# curl -i -H "Content-Type: application/json" -X PUT -d '{"student":true}' http://localhost:5000/api/people/id=2
+def update_task(person_id):
+    person = [person for person in people if person['id'] == person_id]
+    if len(person) == 0:
+        notFound(abort(404))
+    if not request.json:
+        badRequest(abort(400))
+    if 'name' in request.json and type(request.json['name']) is not str:
+        badRequest(abort(400))
+    if 'age' in request.json and type(request.json['age']) is not int:
+        badRequest(abort(400))
+    if 'sexe' in request.json and type(request.json['sexe']) is not str:
+        badRequest(abort(400))
+    if 'student' in request.json and type(request.json['student']) is not bool:
+        badRequest(abort(400))
+    person[0]['name'] = request.json.get('name', person[0]['name'])
+    person[0]['age'] = request.json.get('age', person[0]['age'])
+    person[0]['sexe'] = request.json.get('sexe', person[0]['sexe'])
+    person[0]['student'] = request.json.get('student', person[0]['student'])
+    return jsonify({'person': person})
+
