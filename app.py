@@ -18,3 +18,12 @@ people = [
         'student': True
     }
 ]
+
+# Get list of all people
+@app.route('/api/people/', methods=['GET'])
+# curl -i http://localhost:5000/api/people/
+def getPeople():
+    if len(people) == 0:
+        abort(404)
+    return jsonify({'people': people})
+
