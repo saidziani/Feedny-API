@@ -27,3 +27,12 @@ def getPeople():
         abort(404)
     return jsonify({'people': people})
 
+
+# Get one person by id
+@app.route('/api/people/id=<int:person_id>', methods=['GET'])
+# curl -i http://localhost:5000/api/people/id=2
+def getPerson(person_id):
+    person = [person for person in people if person['id'] == person_id]
+    if len(person) == 0:
+        notFound(abort(404))
+    return jsonify({'person': person})
