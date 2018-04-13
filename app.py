@@ -78,3 +78,15 @@ def update_task(person_id):
     person[0]['student'] = request.json.get('student', person[0]['student'])
     return jsonify({'person': person})
 
+
+
+# Delete existing person
+@app.route('/api/people/id=<int:person_id>', methods=['DELETE'])
+# curl -i -H "Content-Type: application/json" -X DELETE http://localhost:5000/api/people/id=2
+def deletePerson(person_id):
+    person = [person for person in people if person['id'] == person_id]
+    if len(person) == 0:
+        notFound(abort(404))
+    people.remove(person[0])
+    return jsonify({'result': True})
+
