@@ -90,3 +90,16 @@ def deletePerson(person_id):
     people.remove(person[0])
     return jsonify({'result': True})
 
+
+# Error handling
+@app.errorhandler(404)
+def notFound(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+@app.errorhandler(400)
+def badRequest(error):
+    return make_response(jsonify({'error': 'Bad request'}), 400)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
