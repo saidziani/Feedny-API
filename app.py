@@ -1,17 +1,21 @@
 from flask import Flask, jsonify, make_response, request, abort
-from helper import Helper
+from api_helper import ApiHelper
+
+import sys
+sys.path.insert(0,"../ArabicTextCategorization/lib/")
+from helper import Helper 
 
 app = Flask(__name__)
-help = Helper()
-
+apiHelp = ApiHelper()
+predictHelp = Helper()
 
 
 # Get category articles
 @app.route('/api/articles/category=<category>', methods=['GET'])
 # curl -i http://localhost:5000/api/articles/category=<category>
 def getArticles(category):
-    articles = help.getArticlesByCategory(category)
-    # print(articles)
+    articles = apiHelp.getArticlesByCategory("5af963201d41c81e212fbf1d")
+    print(articles)
     if len(articles) == 0:
         abort(404)
     return jsonify({'articles': articles})
