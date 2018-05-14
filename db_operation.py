@@ -23,8 +23,9 @@ class DbOperation():
 
 
     def dbFindByCategory(self, category):
+        from bson.json_util import dumps
         collection = self.getCollection('articles')
-        return list(collection.find({"categoryPredicted": "placeholderCategory"}))
+        return dumps(list(collection.find({"categoryPredicted": "placeholderCategory"})))
 
 
 
