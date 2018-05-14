@@ -25,11 +25,18 @@ class DbOperation():
 
     def dbFindByCategory(self, category):
         collection = self.getCollection('articles')
-        return dumps(list(collection.find({"categoryPredicted": "placeholderCategory"})))
+        articles = list(collection.find({"categoryPredicted": "placeholderCategory"}))
+        new_articles = []
+        for article in articles:
+            article['_id'] = str(article['_id'])
+            new_articles.append(article)
+        return new_articles
 
     def dbFindById(self, id):
         collection = self.getCollection('articles')
-        return dumps(collection.find_one({"_id": ObjectId(id)}))
+        article = collection.find_one({"_id": ObjectId(id)})
+        article['_id'] = str(article['_id'])
+        return article
 
 
 
