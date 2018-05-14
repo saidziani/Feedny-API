@@ -5,9 +5,10 @@ from news_article import NewsArticle
 from db_operation import DbOperation
 
 class Helper():
-    def __init__(self, url=None):
-        self.url = url
+    def __init__(self):
         self.newsapi = NewsApiClient(api_key='401ff7e72a054bf88dd8fffa4af72f96')
+        self.dbOperation = DbOperation('newsapp')
+        
 
     def getArticleContent(self, url):
         article = Article(url)
@@ -34,12 +35,18 @@ class Helper():
         return article
 
 
+    def getArticlesByCategory(self, category):
+        return self.dbOperation.dbFindByCategory(category)
+
+
 if __name__ == '__main__':
     help = Helper()
-    dbOperation = DbOperation('newsapp')
-    sources = ['espn']
-    topHeadlines = help.getTopBySources(sources)
-    article = help.getArticles(topHeadlines)[0] 
-    article = help.setArticleDetails(article).getNewsArticle()
-    id = dbOperation.dbInsert(article)
-    print(id)
+    # dbOperation = DbOperation('newsapp')
+    # sources = ['espn']
+    # topHeadlines = help.getTopBySources(sources)
+    # article = help.getArticles(topHeadlines)[0] 
+    # article = help.setArticleDetails(article).getNewsArticle()
+    # id = dbOperation.dbInsert(article)
+    # print(id)
+
+    print(help.getArticlesByCategory('da'))
