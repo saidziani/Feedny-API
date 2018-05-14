@@ -2,6 +2,7 @@
 import pymongo
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from bson.json_util import dumps
 
 
 class DbOperation():
@@ -23,9 +24,12 @@ class DbOperation():
 
 
     def dbFindByCategory(self, category):
-        from bson.json_util import dumps
         collection = self.getCollection('articles')
         return dumps(list(collection.find({"categoryPredicted": "placeholderCategory"})))
+
+    def dbFindById(self, id):
+        collection = self.getCollection('articles')
+        return dumps(collection.find_one({"_id": ObjectId(id)}))
 
 
 
