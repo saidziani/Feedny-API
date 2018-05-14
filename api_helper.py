@@ -48,6 +48,9 @@ class ApiHelper():
     def getArticlesByCategory(self, category):
         return self.dbOperation.dbFindByCategory(category)
 
+    def getArticleById(self, id):
+        return self.dbOperation.dbFindById(id)
+
 
 if __name__ == '__main__':
     help = ApiHelper()
