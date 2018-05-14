@@ -31,7 +31,17 @@ class Helper():
         content = self.getArticleContent(article['url'])
         summaryGenerated = "placeholderSummary"
         categoryPredicted = "placeholderCategory"
-        article = NewsArticle(url=article['url'], author=article['author'], source=article['source']['id'], title=article['title'], content=content, urlToImage=article['urlToImage'], publishedAt=article['publishedAt'], summaryGenerated=summaryGenerated, categoryPredicted=categoryPredicted)
+        article = NewsArticle(
+            url=article['url'], 
+            author=article['author'], 
+            source=article['source']['id'], 
+            title=article['title'], 
+            content=content, 
+            urlToImage=article['urlToImage'], 
+            publishedAt=article['publishedAt'], 
+            summaryGenerated=summaryGenerated, 
+            categoryPredicted=categoryPredicted
+        )
         return article
 
 

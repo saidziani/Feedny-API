@@ -6,7 +6,7 @@ help = Helper()
 
 
 
-# Get list of all articles
+# Get category articles
 @app.route('/api/articles/category=<category>', methods=['GET'])
 # curl -i http://localhost:5000/api/articles/category=<category>
 def getArticles(category):
