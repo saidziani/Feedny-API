@@ -22,7 +22,8 @@ class DbOperation():
         return article_id
 
 
-    def dbFindByCategory(self, collection, category):
+    def dbFindByCategory(self, category):
+        collection = self.getCollection('articles')
         return list(collection.find({"categoryPredicted": "placeholderCategory"}))
 
 
@@ -33,6 +34,6 @@ if __name__ == '__main__':
     collection = db.getCollection('articles')
     # print(collection.find_one({"_id": ObjectId('5af963201d41c81e212fbf1d')}))
     # print(ObjectId("5af967141d41c82971e8a695").generation_time)
-    results = db.dbFindByCategory(collection, 'sports')
+    results = db.dbFindByCategory('sports')
     print(results[0]['url'])
     
