@@ -12,9 +12,13 @@ class ApiHelper():
 
     def getArticleContent(self, url):
         article = Article(url)
-        article.download()
-        article.parse()
-        return article.text
+        try:
+            article.download()
+        except:
+            article = None
+        if article != None:
+            article.parse()
+            return article.text
 
 
     def getTopBySources(self, sources):
@@ -30,7 +34,7 @@ class ApiHelper():
     def setArticleDetails(self, article):
         content = self.getArticleContent(article['url'])
         summaryGenerated = "placeholderSummary"
-        categoryPredicted = "placeholderCategory"
+        categoryPredicted = self.setCategoryEnglish(content)
         article = NewsArticle(
             url=article['url'], 
             author=article['author'], 
@@ -42,24 +46,39 @@ class ApiHelper():
             summaryGenerated=summaryGenerated, 
             categoryPredicted=categoryPredicted
         )
-        return article
+        return article.getNewsArticle()
 
+
+    def insertArticles(self, sources):
+        articles = self.getTopBySources(sources)['articles']
+        for article in articles:
+            article = self.setArticleDetails(article)
+            id = self.dbOperation.dbInsert(article)
+            print('OK:', id)    
+        return 'DONE FOR ALL ARTICLES.'
+      
 
     def getArticlesByCategory(self, category):
-        return self.dbOperation.dbFindByCategory(category)
+        articles = self.dbOperation.dbFindByCategory(category)
+        result = []
+        for article in articles:
+            result.append(Article)
+        return articles
 
     def getArticleById(self, id):
         return self.dbOperation.dbFindById(id)
 
+    def setCategoryArabic(self, article):
+        import sys
+        sys.path.insert(0,"../ArabicTextCategorization/lib/")
+        from helper import Helper 
+        predictHelp = Helper()
+        predictedCategory = predictHelp.predict(article)
+        return predictedCategory
 
-if __name__ == '__main__':
-    help = ApiHelper()
-    # dbOperation = DbOperation('newsapp')
-    # sources = ['espn']
-    # topHeadlines = help.getTopBySources(sources)
-    # article = help.getArticles(topHeadlines)[0] 
-    # article = help.setArticleDetails(article).getNewsArticle()
-    # id = dbOperation.dbInsert(article)
-    # print(id)
-
-    print(help.getArticlesByCategory('da'))
+    def setCategoryEnglish(self, article):
+        import sys
+        sys.path.insert(0,"../EnglishTextCategorization/")
+        from Predict import predict 
+        predictedCategory = predict(article)
+        return predictedCategory

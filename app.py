@@ -1,13 +1,9 @@
 from flask import Flask, jsonify, make_response, request, abort
 from api_helper import ApiHelper
 
-import sys
-sys.path.insert(0,"../ArabicTextCategorization/lib/")
-from helper import Helper 
 
 app = Flask(__name__)
 apiHelp = ApiHelper()
-predictHelp = Helper()
 
 
 # Get category articles
@@ -15,9 +11,22 @@ predictHelp = Helper()
 # curl -i http://localhost:5000/api/articles/category=<category>
 def getArticlesByCategory(category):
     articles = apiHelp.getArticlesByCategory(category)
+    print(articles)
     if len(articles) == 0:
         abort(404)
     return jsonify({'articles': articles})
+
+
+# Save Article to DB
+@app.route('/api/articles/add/sources=<sources>', methods=['GET'])
+# curl -i http://localhost:5000/api/add/articles/sources=<sources>
+def saveArticlesBySources(sources):
+    response = None
+    response = apiHelp.insertArticles(sources.split(','))
+    print(response)
+    if response == None:
+        abort(404)
+    return jsonify({'Response': response})
 
 
 # Error handling

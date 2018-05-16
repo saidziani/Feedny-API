@@ -25,7 +25,7 @@ class DbOperation():
 
     def dbFindByCategory(self, category):
         collection = self.getCollection('articles')
-        articles = list(collection.find({"categoryPredicted": "placeholderCategory"}))
+        articles = list(collection.find({"categoryPredicted": category}).sort("publishedAt", -1))
         new_articles = []
         for article in articles:
             article['_id'] = str(article['_id'])
@@ -44,8 +44,11 @@ class DbOperation():
 if __name__ == '__main__':
     db = DbOperation('newsapp')
     collection = db.getCollection('articles')
+    print(collection)
+    for article in collection.find():
+        print(article)
     # print(collection.find_one({"_id": ObjectId('5af963201d41c81e212fbf1d')}))
     # print(ObjectId("5af967141d41c82971e8a695").generation_time)
-    results = db.dbFindByCategory('sports')
-    print(results[0]['url'])
+    # results = db.dbFindByCategory('sports')
+    # print(results[0]['url'])
     
