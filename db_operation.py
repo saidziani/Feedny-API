@@ -2,7 +2,7 @@
 import pymongo
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-# from bson.json_util import dumps
+from bson.json_util import dumps
 
 
 class DbOperation():
@@ -56,6 +56,7 @@ class DbOperation():
         return profile
 
     def dbUpdateProfile(self, newProfile):
+        print("Hey", newProfile)
         username = newProfile['username']
         profile = self.dbFindProfileByUsername(username)
         try:

@@ -104,7 +104,6 @@ class ApiHelper():
     def insertProfile(self, profile):
         info = self.splitProfile(profile) 
         import hashlib
-        hashlib.sha224(str.encode(info['password'])).hexdigest()
         profile = UserProfile(
             username = info['username'],
             password = hashlib.sha224(str.encode(info['password'])).hexdigest(),
@@ -117,9 +116,20 @@ class ApiHelper():
         return str(id)
 
     def updateProfile(self, newProfile):
-        info = self.splitProfile(newProfile)
-        id = self.dbOperation.dbUpdateProfile(info)
-        print('OK:', id)    
+        info = newProfile.split('::')
+        username = info[0]
+        profile = self.dbOperation.dbFindProfileByUsername(username, False)
+        upWhat = info[1].split(':')
+        fieldToUpdate, valueToUpdate = upWhat[0], upWhat[1]
+        if fieldToUpdate == 'password':
+            from hashlib import sha224
+            profile['password'] = sha224(str.encode(valueToUpdate)).hexdigest()
+        else:
+            newValuesToUpdate = valueToUpdate.split(',')
+            for category in profile[fieldToUpdate]:
+                newValuesToUpdate.append(category)
+            profile[fieldToUpdate] = list(set(newValuesToUpdate))        
+        id = self.dbOperation.dbUpdateProfile(profile)
         return str(id)
 
 
