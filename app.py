@@ -6,6 +6,17 @@ app = Flask(__name__)
 apiHelp = ApiHelper()
 
 
+# Get new articles on load
+@app.route('/api/articles/onload/username=<username>', methods=['GET'])
+# curl -i http://localhost:5000/api/articles/onload/username=<username>
+def getArticlesOnLoad(username):
+    articles = apiHelp.getArticlesByUser(username)
+    print(articles)
+    if len(articles) == 0:
+        abort(404)
+    return jsonify({'articles': articles})
+
+
 # Get category articles
 @app.route('/api/articles/category=<category>', methods=['GET'])
 # curl -i http://localhost:5000/api/articles/category=<category>
@@ -23,6 +34,29 @@ def getArticlesByCategory(category):
 def saveArticlesBySources(sources):
     response = None
     response = apiHelp.insertArticles(sources.split(','))
+    if response == None:
+        abort(404)
+    return jsonify({'Response': response})
+
+
+# Save Profile to DB
+@app.route('/api/profiles/add/profile=<profile>', methods=['GET'])
+# curl -i http://localhost:5000/api/profiles/add/profile=<profile>
+def saveProfile(profile):
+    response = None
+    response = apiHelp.insertProfile(profile)
+    print(response)
+    if response == None:
+        abort(404)
+    return jsonify({'Response': response})
+
+
+# Update Profile in DB
+@app.route('/api/profiles/update/profile=<profile>', methods=['GET'])
+# curl -i http://localhost:5000/api/profiles/update/profile=<profile>
+def updateProfile(profile):
+    response = None
+    response = apiHelp.updateProfile(profile)
     print(response)
     if response == None:
         abort(404)
