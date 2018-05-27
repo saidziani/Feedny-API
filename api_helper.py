@@ -5,6 +5,8 @@ from news_article import NewsArticle
 from user_profile import UserProfile
 from db_operation import DbOperation
 
+ip = "192.168.1.234"
+
 class ApiHelper():
     def __init__(self):
         self.newsapi = NewsApiClient(api_key='401ff7e72a054bf88dd8fffa4af72f96')
@@ -29,6 +31,11 @@ class ApiHelper():
     def getArticles(self, topHeadlines):
         return topHeadlines['articles']
 
+    def getSourceImage(self, source):
+        imgAdrr = "http://"+ip+"/img/sources-logo/"+source+".png"
+        return imgAdrr
+
+
     def setArticleDetails(self, article):
         content = self.getArticleContent(article['url'])
         summaryGenerated = "placeholderSummary"
@@ -42,9 +49,11 @@ class ApiHelper():
             urlToImage=article['urlToImage'], 
             publishedAt=article['publishedAt'], 
             summaryGenerated=summaryGenerated, 
-            categoryPredicted=categoryPredicted
+            categoryPredicted=categoryPredicted,
+            sourceImage=self.getSourceImage(article['source']['id'])
         )
-        return article.getNewsArticle()
+        article = article.getNewsArticle()
+        return article
 
     def insertArticles(self, sources):
         articles = self.getTopBySources(sources)['articles']
@@ -103,6 +112,7 @@ class ApiHelper():
 
     def insertProfile(self, profile):
         info = self.splitProfile(profile) 
+        print(type(info))
         import hashlib
         profile = UserProfile(
             username = info['username'],
