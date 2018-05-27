@@ -2,7 +2,7 @@
 import pymongo
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-from bson.json_util import dumps
+# from bson.json_util import dumps
 
 
 class DbOperation():
@@ -10,6 +10,7 @@ class DbOperation():
         client = MongoClient('localhost', 27017)
         self.dbName = dbName
         self.db = client[self.dbName]
+        # self.db.drop_collection('articles')
         # self.db.drop_collection('profiles')
         
 
@@ -18,13 +19,15 @@ class DbOperation():
             return self.db[collection]
         else:
             c = self.db.create_collection(collection)
-            c.create_index([('username', pymongo.ASCENDING)], unique=True)
+            if collection == 'profiles':
+                c.create_index([('username', pymongo.ASCENDING)], unique=True)
             return c
 
-    def dbInsert(self, article, collection):
-        articles = self.getCollection(collection)
+    def dbInsert(self, item, collection):
+        items = self.getCollection(collection)
         try:
-            return articles.insert_one(article).inserted_id
+            id = items.insert_one(item).inserted_id
+            return id
         except:
             return None
         
@@ -72,10 +75,16 @@ class DbOperation():
 
 if __name__ == '__main__':
     db = DbOperation('newsapp')
+    # collection = db.getCollection('articles')
+    # # profile = db.dbFindProfileByUsername('Saïd', False)
+    # # print(profile)
+    # # print()
+    # abcdefg = {'publishedAt': 'haha', 'author': 'haha', 'title': 'haha', 'url': 'haha', 'summaryGenerated': 'haha', 'categoryPredicted': 'haha', 'source': 'haha', 'urlToImage': 'haha', 'content': 'haha', 'sourceImage': 'haha'}
+
+    # id = db.dbInsert(abcdefg, 'articles')
+    # print(id)
+
     collection = db.getCollection('articles')
-    # profile = db.dbFindProfileByUsername('Saïd', False)
-    # print(profile)
-    # print()
     for article in collection.find():
          print(article)
     # profile['sources'] = ['espn', 'abc-news', 'bbc-news', 'al-jazeera-news']
